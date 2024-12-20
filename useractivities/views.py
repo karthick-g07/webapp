@@ -16,7 +16,7 @@ def login_view(request):
         # Validate inputs
         if not email or not password:
             messages.error(request, 'Email and password are required.')
-            return render(request, 'useractivities/login.html')
+            return render(request, 'login.html')
 
         # Fetch the user from the database
         user = me.get_user_by_email(email)  # Define this function in `dboperations`
@@ -35,9 +35,9 @@ def login_view(request):
         # If no matching user is found or password is incorrect
         messages.error(request, 'The username and/or password you specified are not correct.')
         print('checking')
-        return render(request, 'useractivities/login.html')
+        return render(request, 'login.html')
 
-    return render(request, 'useractivities/login.html')
+    return render(request, 'login.html')
 def register_view(request):
     if request.method == 'POST':
         # User data manually provided (you can replace these with dynamic data from form)
