@@ -16,7 +16,7 @@ def login_view(request):
         # Validate inputs
         if not email or not password:
             messages.error(request, 'Email and password are required.')
-            return render(request, 'login.html')
+            return render(request, 'useractivities/login.html')
 
         # Fetch the user from the database
         user = me.get_user_by_email(email)  # Define this function in `dboperations`
@@ -30,14 +30,14 @@ def login_view(request):
                 'gender': user['gender'],
                 'registerno':user['registerno'],
             }
-            return render(request, 'dashboard.html', {'userdata': userdata})
+            return render(request, 'useractivities/dashboard.html', {'userdata': userdata})
 
         # If no matching user is found or password is incorrect
         messages.error(request, 'The username and/or password you specified are not correct.')
         print('checking')
-        return render(request, 'login.html')
+        return render(request, 'useractivities/login.html')
 
-    return render(request, 'login.html')
+    return render(request, 'useractivities/login.html')
 def register_view(request):
     if request.method == 'POST':
         # User data manually provided (you can replace these with dynamic data from form)
@@ -53,20 +53,20 @@ def register_view(request):
         # Validate inputs
         if not username or not password or not email:
             messages.error(request, 'Username, password, and email are required')
-            return render(request, 'register.html')
+            return render(request, 'useractivities/register.html')
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match')
-            return render(request, 'register.html')
+            return render(request, 'useractivities/register.html')
 
         if len(password) < 8:
             messages.error(request, 'Password must be at least 8 characters long')
-            return render(request, 'register.html')
+            return render(request, 'useractivities/register.html')
 
         existing_users = me.get_all_users()  # Get all users
         if any(user['email'] == email for user in existing_users):
             messages.error(request, 'Email already registered')
-            return render(request, 'register.html') 
+            return render(request, 'useractivities/register.html') 
 
         # Hash the password before storing it (use Django's make_password if needed)
         hashed_password = make_password(password)
@@ -91,7 +91,7 @@ def register_view(request):
         messages.success(request, 'Registration successful. Please log in.')
         return redirect('login')  # Make sure you have the correct name for your login view
 
-    return render(request, 'register.html')
+    return render(request, 'useractivities/register.html')
 
 def forget_view(request):
     if request.method == 'POST':
@@ -102,21 +102,21 @@ def forget_view(request):
         # Validate inputs
         if not email or not password or not confirm_password:
             messages.error(request, 'All fields are required.')
-            return render(request, 'forgetpage.html')
+            return render(request, 'useractivities/forgetpage.html')
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
-            return render(request, 'forgetpage.html')
+            return render(request, 'useractivities/forgetpage.html')
 
         if len(password) < 8:
             messages.error(request, 'Password must be at least 8 characters long.')
-            return render(request, 'forgetpage.html')
+            return render(request, 'useractivities/forgetpage.html')
 
         # Check if email exists in the database
         user = me.get_user_by_email(email)  # Function to fetch user by email
         if not user:
             messages.error(request, 'No account found with this email.')
-            return render(request, 'forgetpage.html')
+            return render(request, 'useractivities/forgetpage.html')
 
         # Update the password in MongoDB
         hashed_password = make_password(password)
@@ -127,6 +127,6 @@ def forget_view(request):
         except Exception as e:
             messages.error(request, 'Failed to update password. Please try again later.')
             print(f"Error updating password: {e}")
-            return render(request, 'forgetpage.html')
+            return render(request, 'useractivities/forgetpage.html')
 
-    return render(request, 'forgetpage.html')
+    return render(request, 'useractivities/forgetpage.html')
